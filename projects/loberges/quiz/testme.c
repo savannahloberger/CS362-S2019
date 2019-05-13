@@ -50,9 +50,10 @@ void testme()
     c = inputChar();
     s = inputString();
 
-    printf("String returned: %s ", s);
-    printf("String character 0: %c ", s[0]);
-    printf("char 3: %c ", s[3]);
+    // print statements to confirm I was accessing the string correctly
+    // printf("String returned: %s ", s);
+    // printf("String character 0: %c ", s[0]);
+    // printf("char 3: %c ", s[3]);
 
     printf("Iteration %d: c = %c, s = %s, state = %d\n", tcCount, c, s, state);
 
