@@ -5,12 +5,12 @@
 CFLAGS= -Wall -fpic -coverage -lm -std=c99
 
 testme: testme.c
-        gcc  -o testme -g testme.c $(CFLAGS)
+	gcc  -o testme -g testme.c $(CFLAGS)
 
 runtests: testme
-        ./testme &> randomtestresult.out
-        gcov testme.c >> randomtestresult.out
-        cat testme.c.gcov >> randomtestresult.out
+	./testme &> randomtestresult.out
+	gcov testme.c >> randomtestresult.out
+	cat testme.c.gcov >> randomtestresult.out
 
 all: testme
 

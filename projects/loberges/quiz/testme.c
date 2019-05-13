@@ -5,14 +5,37 @@
 
 char inputChar()
 {
-    // TODO: rewrite this function
-    return ' ';
+    // Rewrote this function
+    // Return a random character using the ASCII values from 32 - 127
+    char rChar = ((rand() % 95) + 32);     
+    
+    // return the random character    
+    return rChar;
+
 }
 
 char *inputString()
 {
-    // TODO: rewrite this function
-    return "";
+    // Rewrote this function
+    // allocate memory for the character array (string)
+    char* iString = (char*) calloc(6, sizeof(char));
+    int i;
+    for (i = 0; i < 5; i++){
+	// randomly assign ASCII values from 97 - 117 (a-u) 
+        int j = ((rand() % 20) + 97);
+        char c = (char) j;
+        iString[i] = c;
+    }
+
+    // NULL at end of string
+    iString[5] = '\0';
+    
+    // Return final build of string
+    char *fString = iString;
+    // printf("final string: %s", fString);
+    
+    return fString;
+
 }
 
 void testme()
@@ -26,6 +49,11 @@ void testme()
     tcCount++;
     c = inputChar();
     s = inputString();
+
+    printf("String returned: %s ", s);
+    printf("String character 0: %c ", s[0]);
+    printf("char 3: %c ", s[3]);
+
     printf("Iteration %d: c = %c, s = %s, state = %d\n", tcCount, c, s, state);
 
     if (c == '[' && state == 0) state = 1;
@@ -55,3 +83,4 @@ int main(int argc, char *argv[])
     testme();
     return 0;
 }
+
