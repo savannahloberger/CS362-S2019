@@ -1,6 +1,6 @@
 /* Savannah Loberger
  * File: cardtest1.c
- * A boundary test for the skmithy card
+ * A boundary test for the smithy card
  */
 
 

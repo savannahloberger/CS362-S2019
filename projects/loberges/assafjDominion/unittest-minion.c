@@ -1,6 +1,6 @@
 /* Savannah Loberger
- * File: unittest4.c
- * test the village function 
+ * File: unittest-minion.c
+ * test the minionCard function 
  */
 
 
@@ -11,7 +11,7 @@
 #include <assert.h>
 #include "rngs.h"
 
-#define TESTCARD "village"
+#define TESTCARD "minion"
 
 // Reference: http://www.dillonbhuff.com/?p=439
 //#define MY_ASSERT(x) if (!(x)) { printf("My custom assertion failed: (%s), function %s, file %s, line %d.\n", STR(x), __PRETTY_FUNCTION__, __FILE__, __LINE__); abort(); }
@@ -30,8 +30,8 @@ int main() {
     int seed = 1000;
     int numPlayers = 2;
     int player = 0;
-        struct gameState G, testG;
-        int k[10] = {adventurer, embargo, village, minion, mine, cutpurse,
+    struct gameState G, testG;
+    int k[10] = {adventurer, embargo, village, minion, mine, cutpurse,
                         sea_hag, tribute, smithy, council_room};
 
         // initialize a game state and player cards
@@ -47,13 +47,20 @@ int main() {
         memcpy(&testG, &G, sizeof(struct gameState));
         choice1 = 1;
         
-        //cardEffect(TESTCARD, choice1, choice2, choice3, &testG, handpos, &bonus);
-	
+	    player = whoseTurn(&testG);
 
-        player = whoseTurn(&testG);
+		//run the refractored code for the minion card, choose option 1
+		minionCard(&testG, player, handpos, 1, 0);
 
         //test should be one less card than the state
         MY_ASSERT((testG.handCount[player]-1) == (G.handCount[player]));
+
+		// ----------- TEST 2: Check that the coins are added correctly --------------
+        printf("TEST 2: \n");
+		
+		// coins should be + 2 from original 
+		MY_ASSERT((testG.coins) == (G.coins + 2));
+	
 
 
         printf("----------End Testing %s Card----------\n", TESTCARD);
@@ -64,15 +71,56 @@ int main() {
 
 
 /* For referrence:
-void village_card(int currentPlayer, struct gameState *state, int handPos){
-      //+1 Card
-      drawCard(currentPlayer, state);
+void minionCard(struct gameState* state, int currentPlayer, int handPos, int choice1, int choice2)
+{
+	//+1 action
+	state->numActions++;
 
-      //+2 Actions
-      state->numActions = state->numActions + 2;
+	//discard card from hand
+	discardCard(handPos, currentPlayer, state, 0);
 
-      //discard played card from hand
-      discardCard(handPos, currentPlayer, state, 0);
+	if (choice1)		//+2 coins
+	{
+		state->coins = state->coins++;
+	}
+
+	else if (choice2)		//discard hand, redraw 4, other players with 5+ cards discard hand and draw 4
+	{
+		//discard hand
+		while (numHandCards(state) < 0)
+		{
+			discardCard(handPos, currentPlayer, state, 0);
+		}
+
+		//draw 4
+		for (int i = 0; i < 4; i++)
+		{
+			drawCard(currentPlayer, state);
+		}
+
+		//other players discard hand and redraw if hand size > 4
+		for (int i = 0; i < state->numPlayers; i++)
+		{
+			if (i != currentPlayer)
+			{
+				if (state->handCount[i] > 4)
+				{
+					//discard hand
+					while (state->handCount[i] > 0)
+					{
+						discardCard(handPos, i, state, 0);
+					}
+
+					//draw 4
+					for (int j = 0; j < 4; j++)
+					{
+						drawCard(i, state);
+					}
+				}
+			}
+		}
+
+	}
 }
 */
 
